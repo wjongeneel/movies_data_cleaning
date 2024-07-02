@@ -13,7 +13,3 @@ tables = [
 for table in tables: 
     print(table)
     dbutils.fs.rm(table, True)
-
-
-# COMMAND ----------
-

@@ -52,6 +52,3 @@ CREATE TABLE movie_to_genre (
     movie_id    INTEGER,
     genre_id    INTEGER
 );
-
--- COMMAND ----------
-

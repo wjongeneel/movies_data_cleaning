@@ -21,7 +21,7 @@ def test_CsvDataSource_fetch_data():
     ]
     expected_df_len = 3
     csv_data_source = CsvDataSource(
-        "test_data/CsvDataSource.csv", multiline=True, header=True
+        "tests/test_data/CsvDataSource.csv", multiline=True, header=True
     )
     df = csv_data_source.fetch_data()
     actual_columns = df.columns
@@ -39,7 +39,7 @@ def test_DataTransformer_get_df():
         ["id", "label"],  # add your column names here
     )
     csv_data_source = CsvDataSource(
-        "test_data/CsvDataSource.csv", multiline=True, header=True
+        "tests/test_data/CsvDataSource.csv", multiline=True, header=True
     )
     df = csv_data_source.fetch_data()
     datatransformer = DataTransformer(df)
@@ -60,7 +60,7 @@ def test_DataTransformer_normalize_columns():
         "gross",
     ]
     csv_data_source = CsvDataSource(
-        "test_data/CsvDataSource.csv", multiline=True, header=True
+        "tests/test_data/CsvDataSource.csv", multiline=True, header=True
     )
     df = csv_data_source.fetch_data()
     datatransformer = DataTransformer(df)

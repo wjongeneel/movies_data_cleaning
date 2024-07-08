@@ -33,4 +33,4 @@ jobs:
     
     - run: |
         export PYTHONPATH=~/repos/movies_data_cleaning/pipeline_code/
-        pwd
+        ls

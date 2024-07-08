@@ -1,117 +1,47 @@
 # Databricks notebook source
-# read csv into dataframe
-df = read_csv("dbfs:/FileStore/movies.csv", header=True, multiLine=True)
+# MAGIC %run ./pipeline_code/pipeline_code.py
 
-
-# COMMAND ----------
-
-# replace - chars in column names with _ and set column names lowercase
-df = normalize_column_names(df)
-
-# COMMAND ----------
-
-# drop dolumns with a percentage null values > 25 %
-df = drop_cols_with_high_nullperc(df, 25)
-
-# COMMAND ----------
-
-# drop rows containing null values
-df = drop_rows_with_null_values(df)
-
-# COMMAND ----------
-
-# drop duplicate rows
-df = drop_duplicates(df)
-
-# COMMAND ----------
-
-# make sure column movies is of type str
-df = typecast_str(df, "movies")
-
-# make sure unnecessary spaces and newlines are stripped from movies column
-df = strip_column(df, "movies")
-
-# COMMAND ----------
-
-# extract start_year from year
-df = extract_field_from_field(df, "year", "start_year", "\((\d{4})")
-
-# make sure start_year is of type int
-df = typecast_strnumber_to_int(df, "start_year")
-
-# extract end_year from year
-df = extract_field_from_field(df, "year", "end_year", "\(\d{4}–(\d{4})\)")
-
-# make sure end_year is of type int
-df = typecast_strnumber_to_int(df, "end_year")
-
-# drop original year column
-df = drop_column(df, "year")
-
-# COMMAND ----------
-
-# make sure unnecessary spaces and newlines are stripped from genre column
-df = strip_column(df, "genre")
-
-# split genre row to array genre by delimiter ', '
-df = split_col_by_delim(df, "genre", ", ")
-
-# COMMAND ----------
-
-# typecast rating column to float
-df = typecast_strnumber_to_float(df, "rating")
-
-# COMMAND ----------
-
-# make sure unnecessary spaces and newlines are stripped from one_line column
-df = strip_column(df, "one_line")
-
-# typecast one_line column to str
-df = typecast_str(df, "one_line")
-
-# COMMAND ----------
-
-# extract director part from stars column into director column
-df = extract_field_from_field(
-    df, "stars", "director", "Director[s]{0,}:(?<director>[\n\s\w\W]*?)\|"
+movies_datasource = CsvDataSource(
+    filepath="dbfs:/FileStore/movies.csv", header=True, multiline=True
 )
 
-# remove newlines from director column
-df = df.withColumn("director", regexp_replace("director", "\\n", ""))
+df = movies_datasource.fetch_data()
 
-# fillnull column director
-df = blank_as_null(df, ["director"])
+class MoviesDataTransformer(DataTransformer):
+    def clean_data(self):
+        self.normalize_columns()
+        self.drop_cols_with_high_nullperc(25)
+        self.drop_rows_with_null_values()
+        self.drop_duplicates()
+        self.typecast_str("movies")
+        self.strip_column("movies")
+        self.extract_field_from_field("year", "start_year", "\((\d{4})")
+        self.typecast_strnumber_to_int("start_year")
+        self.extract_field_from_field("year", "end_year", "\(\d{4}–(\d{4})\)")
+        self.typecast_strnumber_to_int("end_year")
+        self.drop_column("year")
+        self.strip_column("genre")
+        self.split_col_by_delim("genre", ", ")
+        self.typecast_strnumber_to_float("rating")
+        self.strip_column("one_line")
+        self.typecast_str("one_line")
+        self.extract_field_from_field(
+            "stars", "director", "Director[s]{0,}:(?<director>[\n\s\w\W]*?)\|"
+        )
+        self.regex_replace("director", "\\n", "")
+        self.blank_as_null(["director"])
+        self.split_col_by_delim("director", ", ")
+        self.extract_field_from_field(
+            "stars", "star", "Star[s]{0,}:\n+(?<star>[\w\s\W]{0,1000}+)"
+        )
+        self.regex_replace("star", "\\n", "")
+        self.strip_column("star")
+        self.blank_as_null(["star"])
+        self.split_col_by_delim("star", ", ")
+        self.drop_column("stars")
+        self.typecast_strnumber_to_int("votes")
+        self.blank_as_null()
 
-# split director into director array on delim ', '
-df = split_col_by_delim(df, "director", ", ")
-
-
-# extract star part from stars column into star column
-df = extract_field_from_field(
-    df, "stars", "star", "Star[s]{0,}:\n+(?<star>[\w\s\W]{0,1000}+)"
-)
-
-# remove newlines from star column
-df = df.withColumn("star", regexp_replace("star", "\\n", ""))
-
-# strip star column from whitespaces at beginning and end
-df = strip_column(df, "star")
-
-# fillnull column star
-df = blank_as_null(df, ["star"])
-
-# split star into star array on delim ', '
-df = split_col_by_delim(df, "star", ", ")
-
-# drop stars column
-df = drop_column(df, "stars")
-
-# COMMAND ----------
-
-# remove ',' char from number and typecast to int
-df = typecast_strnumber_to_int(df, "votes")
-
-# COMMAND ----------
-
-# set all blank string column values as None
-df = blank_as_null(df)
+movies_data_transformer = MoviesDataTransformer(df)
+movies_data_transformer.clean_data()
+df = movies_data_transformer.get_df()

@@ -31,8 +31,8 @@ jobs:
         spark-version: ${{ matrix.spark }}
         hadoop-version: '3'
     
-    - run: |
-        export PYTHONPATH=/home/runner/work/movies_data_cleaning/movies_data_cleaning/pipeline_code/
+    # - run: |
+    #     export PYTHONPATH=/home/runner/work/movies_data_cleaning/movies_data_cleaning/pipeline_code/
     
     - run: |
         pip install -r requirements.txt 

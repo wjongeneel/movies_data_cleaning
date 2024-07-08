@@ -37,11 +37,5 @@ jobs:
     - run: |
         pip install -r requirements.txt 
     
-   # - run: |
-   #     pytest tests/main.py 
-    
-    - uses: pavelzw/pytest-action@v2
-      with:
-        emoji: true
-        verbose: true
-        job-summary: true
+    - run: |
+        pytest tests/main.py 

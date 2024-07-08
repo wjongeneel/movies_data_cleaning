@@ -33,4 +33,6 @@ jobs:
     
     - run: |
         export PYTHONPATH=~/repos/movies_data_cleaning/pipeline_code/
-        ls
+    
+    - run: |
+        pip install -r requirements.txt 

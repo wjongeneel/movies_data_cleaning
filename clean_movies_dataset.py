@@ -7,6 +7,7 @@ movies_datasource = CsvDataSource(
 
 df = movies_datasource.fetch_data()
 
+
 class MoviesDataTransformer(DataTransformer):
     def clean_data(self):
         self.normalize_columns()
@@ -41,6 +42,7 @@ class MoviesDataTransformer(DataTransformer):
         self.drop_column("stars")
         self.typecast_strnumber_to_int("votes")
         self.blank_as_null()
+
 
 movies_data_transformer = MoviesDataTransformer(df)
 movies_data_transformer.clean_data()

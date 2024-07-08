@@ -9,7 +9,6 @@ from pyspark.testing.utils import assertDataFrameEqual
 
 spark = SparkSession.builder.appName("unit_tests").getOrCreate()
 
-
 def test_CsvDataSource_fetch_data():
     expected_columns = [
         "MOVIES",

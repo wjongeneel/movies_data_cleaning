@@ -32,14 +32,10 @@ jobs:
         hadoop-version: '3'
     
     - run: |
-        export PYTHONPATH=~/repos/movies_data_cleaning/pipeline_code/
+        export PYTHONPATH=/home/runner/work/movies_data_cleaning/movies_data_cleaning/pipeline_code/
     
     - run: |
         pip install -r requirements.txt 
     
     - run: |
-        pwd
-        
-        
-        
-#pytest tests/main.py 
+        pytest tests/main.py 

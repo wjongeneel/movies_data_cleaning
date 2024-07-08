@@ -1,0 +1,5 @@
+pyspark
+pytest
+pandas
+PyArrow
+numpy==1.26.4

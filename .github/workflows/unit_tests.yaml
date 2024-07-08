@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         python:
-          - '3.9'
+          - '3.10'
         spark:
-          - 3.3.2
+          - 3.5.1
     
     steps: 
     - uses: actions/checkout@v3
@@ -32,4 +32,5 @@ jobs:
         hadoop-version: '3'
     
     - run: |
+        export PYTHONPATH=~/repos/movies_data_cleaning/pipeline_code/
         echo 'mooieboel'

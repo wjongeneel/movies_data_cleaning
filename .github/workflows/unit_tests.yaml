@@ -38,7 +38,7 @@ jobs:
         pip install -r requirements.txt 
     
     - run: | 
-        ls /home/runner/work/movies_data_cleaning/movies_data_cleaning/pipeline_code 
+        echo $PYTHONPATH
 
     #- run: |
     #    pytest tests/main.py 

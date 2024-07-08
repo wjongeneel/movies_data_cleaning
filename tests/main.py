@@ -1,3 +1,6 @@
+import sys 
+sys.path.insert(0, '/home/runner/work/movies_data_cleaning/movies_data_cleaning/pipeline_code')
+
 from pipeline_code import CsvDataSource, DataTransformer
 import pyspark
 from pyspark.sql import SparkSession
